@@ -1,81 +1,85 @@
-const conexion = require('../services/db')
-// Operación de Leer todos los jugadores
-const obtenerTodosLosJugadores = (req, res) => {
-    const sql = 'SELECT * FROM jugadores';
-    
-    conexion.query(sql, (error, filas) => {
-        if (error) {
-            res.status(500).json({ error: 'Error al obtener los jugadores' });
-        } else {
-            res.json(filas);
-        }
-    });
+const {db} = require('../services/db');
+
+
+const getJugadores = async (req, res) => {
+    try {
+      const query = 'SELECT * FROM jugadores';
+      const result = await db.xd(query); // Llama a la función xd del módulo db
+      res.json(result.rows);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
 };
 
 // Operación de Leer un jugador por su ID
-const obtenerJugadorPorId = (req, res) => {
-    const jugadorId = req.params.id;
-    const sql = 'SELECT * FROM jugadores WHERE idNombre = ?';
-    
-    conexion.query(sql, [jugadorId], (error, filas) => {
-        if (error) {
-            res.status(500).json({ error: 'Error al obtener el jugador' });
-        } else {
-            if (filas.length > 0) {
-                res.json(filas[0]);
-            } else {
-                res.status(404).json({ error: 'Jugador no encontrado' });
-            }
-        }
-    });
+const GetjugadorId = async (req, res) => {
+    const idnombre = req.params.id;
+
+    const sql = `SELECT * FROM jugadores WHERE idnombre = '${idnombre}'`;
+    try {
+        const result = await xd(sql, [idnombre]);
+        const filas = result.rows;
+        // ... manejo de resultados ...
+    } catch (error) {
+        console.error('Error en la consulta SQL:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 };
 
 // Operación de Crear un nuevo jugador
-const crearJugador = (req, res) => {
-    const { nombre, posicion, equipo, numero } = req.body;
-    const sql = 'INSERT INTO jugadores (NombreJugador, posicion, equipo, numeroCamisa) VALUES (?, ?, ?, ?)';
-    
-    conexion.query(sql, [nombre, posicion, equipo, numero], (error, resultados) => {
-        if (error) {
-            res.status(500).json({ error: 'Error al crear el jugador' });
-        } else {
-            res.status(201).json({ message: 'Jugador creado exitosamente', id: resultados.insertId });
-        }
-    });
+const crearJugador = async (req, res) => {
+    const { idnombre, nombrejugador, posicion, equipo, numerocamisa } = req.body;
+    try {
+        const sql = `INSERT INTO jugadores (idnombre,nombrejugador, posicion, equipo,numerocamisa) VALUES ('${idnombre}','${nombrejugador}', '${posicion}', '${equipo}', '${numerocamisa}')`;
+        await xd(sql);
+        res.status(201).json({ message: 'Equipo agregado exitosamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 };
 
+
+
 // Operación de Actualizar un jugador por su ID
-const actualizarJugadorPorId = (req, res) => {
-    const jugadorId = req.params.id;
-    const { nombre, posicion, equipo, numero } = req.body;
-    const sql = 'UPDATE jugadores SET NombreJugador = ?, posicion = ?, equipo = ?, numeroCamisa = ? WHERE idNombre = ?';
+const actualizarJugadorPorId = async (req, res) => {
+    const idnombre = req.params.id;
+    const { nombrejugador, posicion, equipo, numerocamisa } = req.body;
     
-    conexion.query(sql, [nombre, posicion, equipo, numero, jugadorId], (error, resultados) => {
-        if (error) {
-            res.status(500).json({ error: 'Error al actualizar el jugador' });
-        } else {
-            res.json({ message: 'Jugador actualizado exitosamente' });
-        }
-    });
+    try {
+        const sql = `UPDATE jugadores SET nombrejugador = '${nombrejugador}', posicion = '${posicion}', equipo = '${equipo}', numerocamisa = '${numerocamisa}' WHERE idnombre = '${idnombre}'`;
+        await xd(sql, [nombrejugador, posicion, equipo, numerocamisa, idnombre]); // Corregir el orden de los parámetros
+        res.json({ message: 'Equipo actualizado exitosamente' });
+    } catch (error) {
+        console.error('Error en la consulta SQL:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 };
+
 // Operación de Eliminar un jugador por su ID
-const eliminarJugadorPorId = (req, res) => {
-    const jugadorId = req.params.id;
-    const sql = 'DELETE FROM jugadores WHERE idNombre = ?';
-    
-    conexion.query(sql, [jugadorId], (error, resultados) => {
-        if (error) {
-            res.status(500).json({ error: 'Error al eliminar el jugador' });
-        } else {
-            res.json({ message: 'Jugador eliminado exitosamente' });
-        }
-    });
+const deleteJugador = async (req, res) => {
+    const idnombre = req.params.id;
+
+    try {
+        const sql = `DELETE FROM jugadores WHERE idnombre = '${idnombre}';`;
+        await xd(sql, [idnombre]);
+        res.json({ message: 'Equipo eliminado exitosamente' });
+    } catch (error) {
+        console.error('Error en la consulta SQL:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 };
 
 module.exports = {
-    obtenerTodosLosJugadores,
-    obtenerJugadorPorId,
+    getJugadores,
+    GetjugadorId,
     crearJugador,
     actualizarJugadorPorId,
-    eliminarJugadorPorId
+    deleteJugador
+   
 };
+//obtenerJugadorPorId,
+//crearJugador,
+//actualizarJugadorPorId,
+//eliminarJugadorPorId,

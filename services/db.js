@@ -1,17 +1,20 @@
-var mysql = require('mysql');
-var conexion = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : '',
-    database : 'beisbol'
-});
 
-conexion.connect((error) => {
-    if (error) {
-        console.error('Error al conectar a la base de datos:', error);
-    } else {
-        console.log('Conexión exitosa a la base de datos');
-    }
-});
+const pg = require("pg");
 
-module.exports = conexion; 
+//Conexion con Base de Datos 
+const xd = async (sql) => {
+  const client = new pg.Client({
+      user: 'postgres',
+      host: 'localhost',
+      database: 'beisbol1',
+      password: '123456',
+      port: 3379,
+    });
+
+  await client.connect();
+  const res = await client.query(sql);
+  await client.end();
+  return res
+};
+
+module.exports = { xd };

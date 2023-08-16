@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  dataBase:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=beisbol1
+    
+    ports:
+      - "3379:5432"
