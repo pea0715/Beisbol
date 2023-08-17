@@ -8,3 +8,6 @@ services:
     
     ports:
       - "3379:5432"
+
+    volumes:
+      - ./sql-scripts:/docker-entrypoint-initdb.d
