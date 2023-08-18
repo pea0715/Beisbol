@@ -7,10 +7,10 @@ describe('agregarEquipo', () => {
   it('should validate that all required fields are present', async () => {
     const req = {
       body: {
-        idequipo: '1',
+        idequipo: 'hola',
         nombreequipo: 'Team A',
         ciudad: 'City A',
-        liga: ''
+        liga: 'League A'
       }
     };
     const res = {
@@ -25,7 +25,7 @@ describe('agregarEquipo', () => {
   it('should handle invalid date formats', async () => {
     const req = {
       body: {
-        idequipo: '1',
+        idequipo: 'hola',
         nombreequipo: 'Team A',
         ciudad: 'City A',
         liga: 'League A',
@@ -50,9 +50,9 @@ describe('actualizarEquipo', () => {
   it('should return a 500 status code and an error message if the SQL query fails', async () => {
     // Arrange
     const req = {
-      params: { id: '1' },
+      params: { id: 'hola' },
       body: {
-        nombreequipo: 'New Team',
+        nombreequipo: '',
         ciudad: 'New City',
         liga: 'New League',
         fecha: '2022-01-01'
