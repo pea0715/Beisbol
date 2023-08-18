@@ -29,7 +29,7 @@ describe('agregarEquipo', () => {
         nombreequipo: 'Team A',
         ciudad: 'City A',
         liga: 'League A',
-        fecha: '2022-01-32'
+        fecha: '2023-08-15'
       }
     };
     const res = {
@@ -53,7 +53,6 @@ describe('actualizarEquipo', () => {
       params: { id: 'hola' },
       body: {
         nombreequipo: '',
-        ciudad: 'New City',
         liga: 'New League',
         fecha: '2022-01-01'
       }
